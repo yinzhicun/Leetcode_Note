@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-04 15:17:41
+ * @LastEditTime: 2021-04-04 16:47:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -9,7 +9,7 @@
 
 # <center>数组习题</center>
 
-## 一、一般数组
+## 一、一维数组&字符数组
 
 ### 1. 搜索
 #### 1.1 二分排序
@@ -154,7 +154,7 @@ public:
 };
 ```
 
-##### 1.2.1 滑动窗口
+##### 1.2.2 滑动窗口
 ![avastar](./picture/209.png)
 - 暴力法求解，时间复杂度为 **O(n^2)** ，空间复杂度为 **O(1)**
 > 1. 循环搜索
@@ -189,7 +189,7 @@ public:
 };
 ```
 
-- 双指针法求解，时间复杂度为 **O(nlogqn)**，空间复杂度为 **O(1)**
+- 双指针法求解，时间复杂度为 **O(nlogn)**，空间复杂度为 **O(1)**
 > 1. 慢指针先不动，快指针移动
 > 2. 窗口元素之和（即快慢指针之间的元素和）大于等于target时，快指针不动，慢指针迁移，实时记录长度
 > 3. 当到不满足条件后，快指针继续移动
@@ -215,6 +215,209 @@ public:
             }
         }
         return length == INT_MAX ? 0 : length;
+    }
+};
+```
+
+##### 1.2.3 几数之和
+
+##### 1.2.4 反转字符串
+1. 普通反转
+![avastar](./picture/344.png)
+- 双指针法求解，时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
+> 头指针与尾指针交换元素同时像中间移动，反转实际上可以看成一种对成变换
+
+```cpp
+class Solution {
+public:
+    void reverseString(vector<char>& s) 
+    {   
+        int start_index = 0;
+        int end_index = s.size() - 1;
+        while (start_index <= end_index)
+        {
+            char temp = s[start_index];
+            s[start_index] = s[end_index];
+            s[end_index] = temp;
+            start_index++;
+            end_index--;
+        }
+    }
+};
+```
+
+2. 特殊条件反转
+![avastar](./picture/541.png)
+- 在上题的基础上加条件，时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
+> 头指针与尾指针交换元素同时像中间移动，反转实际上可以看成一种对成变换
+
+```cpp
+class Solution {
+public:
+    string reverseStr(string s, int k) 
+    {
+        for (int i = 0; i < s.size(); i = i + 2 * k)
+        {
+            if (i + k <= s.size())
+                reverse(s.begin() + i, s.begin() + i + k);
+            else
+                reverse(s.begin() + i, s.end());
+        }
+        return s;
+    }
+};
+```
+
+
+
+3. 左旋反转
+![avastar](./picture/J58.png)
+- 时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
+> 在普通反转的基础上，先全部反转，再部分反转
+
+```cpp
+class Solution {
+public:
+    string reverseLeftWords(string& s, int n) 
+    {
+        reverseall(s, 0, s.size()-1);
+        reverseall(s, 0, s.size() - n - 1);
+        reverseall(s, s.size() - n, s.size() - 1);
+        return s;
+    }
+
+    void reverseall(string& s, int left, int right)
+    {
+        int start_index = left;
+        int end_index = right;
+        while (start_index <= end_index)
+        {
+            char temp = s[start_index];
+            s[start_index] = s[end_index];
+            s[end_index] = temp;
+            start_index++;
+            end_index--;
+        }
+    }
+};
+```
+
+4. 花式反转
+![avastar](./picture/151.png)
+- 时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
+> 1. 先采用双指针法去除空格
+> 2. 去除开头空格的思路与前面移除元素类似
+> 3. 去除中间空格是当有连续两个空格时才去除，所以需要加入约束
+> 4. 最后全部反转，再以空格为依据进行部分反转
+
+```cpp
+class Solution {
+public:
+    string reverseWords(string s) 
+    {
+        //去空格，采用双指针法移除元素的方法
+        int slow_index = 0;
+        int fast_index = 0;
+        //去除开头空格
+        while (s[fast_index] == ' ' && fast_index < s.size())
+        {
+            fast_index++;
+        }
+        //去除中间空格
+        while (fast_index < s.size())
+        {
+            if (s[fast_index] == ' ' && s[fast_index] == s[fast_index + 1])
+            {
+                fast_index ++;
+                continue;
+            }
+            s[slow_index] = s[fast_index];
+            slow_index++;
+            fast_index++;
+        }
+        //去除末尾空格
+        if (s[slow_index - 1] == ' ')
+            slow_index--;
+        s.resize(slow_index);
+        //全部反转
+        reverseall(s, 0, slow_index - 1);
+        //单词反转
+        int next_start = 0;
+        for (int i = 0; i < slow_index; i++)
+        {
+            if (s[i] == ' ')
+            {   
+                reverseall(s, next_start, i - 1);
+                next_start = i + 1;
+            }
+        }
+        //反转剩下的最后一个单词
+        reverseall(s, next_start, slow_index - 1);
+        return s;
+
+
+    }
+
+     void reverseall(string& s, int left, int right)
+    {
+        int start_index = left;
+        int end_index = right;
+        while (start_index <= end_index)
+        {
+            char temp = s[start_index];
+            s[start_index] = s[end_index];
+            s[end_index] = temp;
+            start_index++;
+            end_index--;
+        }
+    }
+};
+```
+
+##### 1.2.5 替换字符
+![avastar](./picture/J05.png)
+- 时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
+> 计算空格数预先给数组扩容带
+> 双指针法从后向前进行操作，避免了从前向后的子序列移动
+
+```cpp
+class Solution {
+public:
+    string replaceSpace(string s) 
+    {
+        int space_count = 0;
+        //给空格计数
+        for (int i = 0; i < s.size(); i++)
+        {
+            if (s[i] == ' ')
+            {
+                space_count++;
+            }
+        }
+        //扩充字符串大小
+        int old_size = s.size();
+        s.resize(s.size() + space_count * 2);
+        int new_size = s.size();
+        //双指针法进行字符替换
+        int slow_index = old_size - 1;
+        int fast_index = new_size - 1;
+        while (slow_index >= 0)
+        {
+            if (s[slow_index] == ' ')
+            {
+                s[fast_index--] = '0';
+                s[fast_index--] = '2';
+                s[fast_index--] = '%';
+                slow_index--;                
+            }
+            else
+            {
+                s[fast_index] = s[slow_index];
+                fast_index--;
+                slow_index--; 
+            }
+        }
+        return s;
     }
 };
 ```
