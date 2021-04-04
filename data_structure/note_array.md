@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-04 11:20:37
+ * @LastEditTime: 2021-04-04 11:24:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -72,7 +72,7 @@
 
 #### 1.2 数组里的双指针法
 ![avastar](./picture/27.png)
-- 暴力法求解，时间复杂度为 **O(n^2)** 
+  - 暴力法求解，时间复杂度为 **O(n^2)** 
 
     ```
     class Solution {
