@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-04 20:29:20
+ * @LastEditTime: 2021-04-04 20:40:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -278,7 +278,7 @@ public:
 ```
 
 ##### 2.3.2 四数之和
-![avastar](./picture/15.png)
+![avastar](./picture/18.png)
 - 时间复杂度为 **O(n^3)**，空间复杂度为 **O(logn)**
 > 1. 对nums先排序，然后依次遍历，实际上就是在三数之和的基础上稍加改进
 > 2. 遍历的同时使用双指针在i的右半部分从两端向中间靠拢，不断比较nums[i]+nums[left]+nums[right]与t]rget - nums[i]的值
