@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-04 16:55:58
+ * @LastEditTime: 2021-04-04 20:29:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -220,6 +220,126 @@ public:
 ```
 
 #### 2.3 几数之和
+##### 2.3.1 三数之和
+![avastar](./picture/15.png)
+- 时间复杂度为 **O(n^2)**，空间复杂度为 **O(logn)**
+> 1. 对nums先排序，然后依次遍历
+> 2. 遍历的同时使用双指针在i的右半部分从两端向中间靠拢，不断比较nums[i]+nums[left]+nums[right]与0的值
+> 3. 两次去重，第一次在外层for循环中；第二次是在每一次找到一个三元组之后
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) 
+    {
+        vector<vector<int>> result;
+        if (nums.size() < 3)
+            return result;
+        sort(nums.begin(), nums.end());
+        //第一个指针，确定第一个元素
+        for (int first_index = 0; first_index < nums.size() - 2; first_index++)
+        {   
+            //去初始元素的重
+            //使用first与first - 1防止漏掉两个数一样的情况
+            if (first_index > 0 && nums[first_index] == nums[first_index - 1])
+            {
+                continue;
+            }
+            //第二个指针，正方向移动
+            int second_index = first_index + 1;
+            //第三个指针，反方向移动
+            int third_index = nums.size() - 1;
+            while (second_index < third_index)
+            {
+                if (nums[first_index] + nums[second_index] + nums[third_index] > 0)
+                    third_index--;
+                else if (nums[first_index] + nums[second_index] + nums[third_index] < 0)
+                    second_index++;
+                else
+                {
+                    result.push_back({nums[first_index], 
+                                      nums[second_index], 
+                                      nums[third_index]});
+                    //中间元素去重，在找到一组值之后去重，较为合理
+                    while (nums[third_index] == nums[third_index - 1] && second_index < third_index)
+                        third_index--;
+                    while (nums[second_index] == nums[second_index + 1] && second_index < third_index)
+                        second_index++;
+
+                    second_index++;
+                    third_index--;
+                }
+            }
+            
+        }
+        return result;
+    }
+};
+```
+
+##### 2.3.2 四数之和
+![avastar](./picture/15.png)
+- 时间复杂度为 **O(n^3)**，空间复杂度为 **O(logn)**
+> 1. 对nums先排序，然后依次遍历，实际上就是在三数之和的基础上稍加改进
+> 2. 遍历的同时使用双指针在i的右半部分从两端向中间靠拢，不断比较nums[i]+nums[left]+nums[right]与t]rget - nums[i]的值
+> 3. 三次去重，第一次在外层for循环中；第二次在第二层for循环中；第三次是在每一次找到一个三元组之后
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) 
+    {
+        vector<vector<int>> result;
+        if (nums.size() < 4)
+            return result;
+        sort(nums.begin(), nums.end());
+        //i为外指针，将四数之和问题转化为三数求解
+        for (int i = 0; i < nums.size() - 3; i++)
+        {   
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            //第一个指针，确定第一个元素
+            for (int first_index = i + 1; first_index < nums.size() - 2; first_index++)
+            {   
+                //去初始元素的重
+                //使用first与first - 1防止漏掉两个数一样的情况
+                if (first_index > i + 1 && nums[first_index] == nums[first_index - 1])
+                {
+                    continue;
+                }
+                //第二个指针，正方向移动
+                int second_index = first_index + 1;
+                //第三个指针，反方向移动
+                int third_index = nums.size() - 1;
+                while (second_index < third_index)
+                {
+                    if (nums[first_index] + nums[second_index] + nums[third_index] > target - nums[i])
+                        third_index--;
+                    else if (nums[first_index] + nums[second_index] + nums[third_index] < target - nums[i])
+                        second_index++;
+                    else
+                    {
+                        result.push_back({nums[i],
+                                          nums[first_index], 
+                                          nums[second_index], 
+                                          nums[third_index]});
+                        //中间元素去重，在找到一组值之后去重，较为合理
+                        while (nums[third_index] == nums[third_index - 1] && second_index < third_index)
+                            third_index--;
+                        while (nums[second_index] == nums[second_index + 1] && second_index < third_index)
+                            second_index++;
+    
+                        second_index++;
+                        third_index--;
+                    }
+                }
+            }
+        }
+       
+        return result;
+    }
+};
+```
 
 #### 2.4 反转字符串
 ##### 2.4.1 普通反转
