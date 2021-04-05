@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-05 09:46:44
+ * @LastEditTime: 2021-04-05 16:04:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -581,6 +581,110 @@ public:
             res_index--;
         }
        
+    }
+};
+```
+
+### 3. KMP算法
+#### 3.1 常规搜索
+![avastar](./picture/28.png)
+- 时间复杂度为 **O(m+n)**，空间复杂度为 **O(n)**
+> 1. 清楚next数组的含义
+> 2. 在构造next数组时关注while语句中的回溯
+
+```cpp
+class Solution {
+public:
+    int strStr(string haystack, string needle) 
+    {   
+        if (needle.size() == 0)
+            return 0;
+        //构建next数组
+        //首先初始化
+        int next[needle.size()];
+        next[0] = 0;
+        //双指针寻找子串的最长相等前后缀
+        int prefix_index = 0;
+        //第一个子序列的长度为2，末尾元素下标为1
+        int suffix_index = 1;
+        while (suffix_index < needle.size())
+        {   
+
+            //当在前缀表首元素之后出现不匹配的情况
+            //回溯，回到前缀继续比较
+            while (prefix_index > 0 && needle[prefix_index] != needle[suffix_index])
+            {
+                prefix_index = next[prefix_index - 1];
+            }
+            //找到的最长相等前缀的
+            if (needle[prefix_index] == needle[suffix_index])
+            {
+                prefix_index++;
+            }
+            next[suffix_index] = prefix_index;
+            suffix_index++;
+        }
+
+        //通过next数组进行匹配
+        //通过next数组进行匹配
+        int second_index = 0;
+        for (int first_index = 0; first_index < haystack.size(); first_index++)
+        {
+            while (second_index > 0 && haystack[first_index] != needle[second_index])
+            {
+                second_index = next[second_index - 1];
+            }
+            if (haystack[first_index] == needle[second_index])
+                second_index++;
+            if (second_index == needle.size())
+                return (first_index - needle.size() + 1);
+        }
+        return -1;
+    }
+};
+```
+
+#### 3.2 寻找子串
+![avastar](./picture/459.png)
+- 时间复杂度为 **O(n)**，空间复杂度为 **O(n)**
+> 1. 清楚next数组的含义
+> 2. 在构造next数组时关注while语句中的回溯
+
+```cpp
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) 
+    {
+        //构建next数组
+        //首先初始化
+        int next[s.size()];
+        next[0] = 0;
+        //双指针寻找子串的最长相等前后缀
+        int prefix_index = 0;
+        //第一个子序列的长度为2，末尾元素下标为1
+        int suffix_index = 1;
+        while (suffix_index < s.size())
+        {   
+
+            //当在前缀表首元素之后出现不匹配的情况
+            //回溯，回到前缀继续比较
+            while (prefix_index > 0 && s[prefix_index] != s[suffix_index])
+            {
+                prefix_index = next[prefix_index - 1];
+            }
+            //找到的最长相等前缀的
+            if (s[prefix_index] == s[suffix_index])
+            {
+                prefix_index++;
+            }
+            next[suffix_index] = prefix_index;
+            suffix_index++;
+        }
+        if (next[s.size() - 1] != 0 && s.size() % (s.size() - next[s.size() - 1]) == 0)
+        {
+            return true;
+        }
+        return false;
     }
 };
 ```
