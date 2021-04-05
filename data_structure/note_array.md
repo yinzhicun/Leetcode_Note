@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-04 20:40:23
+ * @LastEditTime: 2021-04-05 09:46:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -497,8 +497,8 @@ public:
 #### 2.5 替换字符
 ![avastar](./picture/J05.png)
 - 时间复杂度为 **O(n)**，空间复杂度为 **O(1)**
-> 计算空格数预先给数组扩容带
-> 双指针法从后向前进行操作，避免了从前向后的子序列移动
+> 1. 计算空格数预先给数组扩容带
+> 2. 双指针法从后向前进行操作，避免了从前向后的子序列移动
 
 ```cpp
 class Solution {
@@ -538,6 +538,49 @@ public:
             }
         }
         return s;
+    }
+};
+```
+
+#### 2.6 两序列合并
+![avastar](./picture/88.png)
+- 双指针法时间复杂度为 **O(m+n)**，空间复杂度为 **O(1)**
+> 1. 两有序序列各分配一个指针指向数组尾部
+> 2. 双指针法**从后向前**进行操作，避免了从前向后的子序列移动，可以在较小的时间复杂度下，通过常数值的空间复杂度解决问题
+
+```cpp
+class Solution {
+public:
+    void merge(vector<int>& nums1, int s1_size, vector<int>& nums2, int s2_size)
+    {
+        int nums1_index = s1_size - 1;
+        int nums2_index = s2_size - 1;
+        int res_index = s1_size + s2_size - 1;
+        while (nums1_index >= 0 || nums2_index >= 0)
+        {
+            if (nums1_index == -1)
+            {
+                nums1[res_index] = nums2[nums2_index];
+                nums2_index--;
+            }
+            else if (nums2_index == -1)
+            {
+                nums1[res_index] = nums1[nums1_index];
+                nums1_index--;
+            }
+            else if (nums1[nums1_index]  > nums2[nums2_index])
+            {
+                nums1[res_index] = nums1[nums1_index];
+                nums1_index--;
+            }
+            else
+            {
+                nums1[res_index] = nums2[nums2_index];
+                nums2_index--;
+            }
+            res_index--;
+        }
+       
     }
 };
 ```
