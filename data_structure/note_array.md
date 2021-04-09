@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-05 16:04:23
+ * @LastEditTime: 2021-04-09 21:53:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -685,6 +685,64 @@ public:
             return true;
         }
         return false;
+    }
+};
+```
+
+## 二、二维数组
+### 1. 螺旋矩阵
+![avastar](./picture/59.png)
+- 时间复杂度为 **O(n^2)**，空间复杂度为 **O(1)**
+> 1. 抓住循环不变量如图中9个元素的示例，走“1，2”，“3，4”
+> 2. 注意每次对循环不变量进行相同的变化
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) 
+    {
+        vector<vector<int>> matrix(n, vector<int>(n, 0));
+        int loop = n/2;
+        int count = 1;
+        int offset = 1;
+        int startx = 0;
+        int starty = 0;
+        int i,j;
+        while (loop--)
+        {
+            i = startx;
+            j = starty;
+            for (j = starty; j < starty + n - offset; j++)
+            {
+                matrix[i][j] = count;
+                count++;
+            }
+            
+            for (i = startx; i < startx + n - offset; i++)
+            {
+                matrix[i][j] = count;
+                count++;
+            }
+
+            for ( ; j > starty; j--)
+            {
+                matrix[i][j] = count;
+                count++;
+            }
+
+            for ( ; i > startx; i--)
+            {
+                matrix[i][j] = count;
+                count++;
+            }
+
+            offset = offset + 2;
+            startx++;
+            starty++;
+        }
+        if (n%2 == 1)
+            matrix[n/2][n/2] = count;
+        return matrix;
     }
 };
 ```
