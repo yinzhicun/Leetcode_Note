@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-04 09:36:07
- * @LastEditTime: 2021-04-09 21:53:25
+ * @LastEditTime: 2021-04-09 23:14:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_array.md
@@ -690,7 +690,77 @@ public:
 ```
 
 ## 二、二维数组
-### 1. 螺旋矩阵
+### 2. 螺旋矩阵1
+![avastar](./picture/54.png)
+- 时间复杂度为 **O(n^2)**，空间复杂度为 **O(1)**
+> 1. 抓住循环不变量如图中9个元素的示例，走“1，2”，“3，4”
+> 2. 注意每次对循环不变量进行相同的变化
+
+```cpp
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) 
+    {
+        vector<int> result;
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        int loop = (rows > cols ? cols : rows) / 2;
+        int flag = (rows > cols ? cols : rows) % 2;
+        int offset = 1;
+        int start_x = 0;
+        int start_y = 0;
+        int i,j;
+        while (loop--)
+        {
+            i = start_x;
+            j = start_y;
+            for (j = start_y; j < start_y + cols - offset; j++)
+            {
+                result.push_back(matrix[i][j]);
+            }
+            
+            for (i = start_x; i < start_x + rows - offset; i++)
+            {
+                result.push_back(matrix[i][j]);
+            }
+
+            for ( ; j > start_y; j--)
+            {
+                result.push_back(matrix[i][j]);
+            }
+
+            for ( ; i > start_x; i--)
+            {
+                result.push_back(matrix[i][j]);
+            }
+            offset = offset + 2;
+            start_x++;
+            start_y++;
+        }
+
+        if (flag == 1)
+        {
+            if (rows > cols)
+            {
+                for (int k = start_x; k < start_x + rows - offset + 1; k++)
+                {
+                    result.push_back(matrix[k][start_y]);
+                }
+            }
+            else
+            {
+                for (int k = start_y; k < start_y + cols - offset + 1; k++)
+                {
+                    result.push_back(matrix[start_x][k]);
+                }
+            }
+        }
+        return result;
+    }
+};
+```
+
+### 2. 螺旋矩阵2
 ![avastar](./picture/59.png)
 - 时间复杂度为 **O(n^2)**，空间复杂度为 **O(1)**
 > 1. 抓住循环不变量如图中9个元素的示例，走“1，2”，“3，4”
@@ -746,3 +816,4 @@ public:
     }
 };
 ```
+
