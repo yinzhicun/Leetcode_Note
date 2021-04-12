@@ -1,13 +1,4 @@
-<!--
- * @Author: yinzhicun
- * @Date: 2021-04-10 23:18:09
- * @LastEditTime: 2021-04-10 23:36:49
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /Leetcode_Note/data_structure/note_chain.md
--->
-
-# <center>数组习题</center>
+# <center>链表习题</center>
 
 ## 一、虚拟头节点
 ### 1. 移除链表元素
