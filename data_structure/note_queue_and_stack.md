@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-14 09:56:51
- * @LastEditTime: 2021-04-14 11:02:44
+ * @LastEditTime: 2021-04-15 10:36:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Leetcode_Note\data_structure\note_queue_and_stack.md
@@ -156,3 +156,90 @@ public:
     }
 };
 ```
+
+#### 1.2 字符匹配
+![](./picture/1047.png)
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+> 相同时弹栈，不同时压栈
+
+```cpp
+class Solution {
+public:
+    string removeDuplicates(string S) 
+    {
+        string result;
+        for (auto& c : S)
+        {
+            if (result.size() !=0 && result.back() == c)
+                result.pop_back();
+            else
+                result.push_back(c);
+        }
+
+        return result;
+    }
+};
+```
+
+#### 1.3 表达式计算
+![](./picture/150.png)
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+> 理解逆波兰表达式的意义，逆波兰表达式，实际上就是表达式树的后序遍历序列
+![](./picture/150-1.png)
+```cpp
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) 
+    {
+        stack<int> stk; 
+        for (auto& c : tokens)
+        {
+            int a, b;
+            if (!stk.empty() && c == "+")
+            {
+                b = stk.top();
+                stk.pop();
+                a = stk.top();
+                stk.pop();
+                int c = a + b;
+                stk.push(c);
+            }
+            else if (!stk.empty() && c == "-")
+            {
+                b = stk.top();
+                stk.pop();
+                a = stk.top();
+                stk.pop();
+                int c = a - b;
+                stk.push(c);
+            }
+            else if (!stk.empty() && c == "*")
+            {
+                b = stk.top();
+                stk.pop();
+                a = stk.top();
+                stk.pop();
+                int c = a * b;
+                stk.push(c);
+            }
+            else if (!stk.empty() && c == "/")
+            {
+                b = stk.top();
+                stk.pop();
+                a = stk.top();
+                stk.pop();
+                int c = a / b;
+                stk.push(c);
+            }
+            else
+            {
+                stk.push(stoi(c));
+            }            
+        }
+        return stk.top();
+    }
+};
+```
+
+## 三、队列
+### 1. 
