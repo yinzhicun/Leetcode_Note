@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-14 09:56:51
- * @LastEditTime: 2021-04-15 10:36:45
+ * @LastEditTime: 2021-04-16 20:37:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Leetcode_Note\data_structure\note_queue_and_stack.md
@@ -242,4 +242,56 @@ public:
 ```
 
 ## 三、队列
-### 1. 
+### 1. 单调队列
+![](./picture/239.png)
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(k)**
+> 1. 首先构造一个单调递减队列mon_que，该队列主要维护本题滑动窗口中的最大值，依据元素大小进行出队入队
+> 2. 当需要压入元素a时，把右端所有比a小的元素全部弹出，保持队列元素的单调递减性
+> 3. 当需要弹出元素时，若元素为最大值则弹出，反之不用进行任何操作
+> 4. 滑动窗口时，弹出旧元素，压入新元素即可
+
+```cpp
+class Solution {
+public:
+    class mon_que{
+    public:
+        void push(int val)
+        {
+            while (!que.empty() && val > que.back())
+                que.pop_back();
+            que.push_back(val);
+        }
+
+        void pop(int val)
+        {
+            if (!que.empty() && val == que.front())
+                que.pop_front();
+        }
+
+        int front()
+        {
+            return que.front();
+        }
+    
+    private:
+        deque<int> que; 
+    };
+
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) 
+    {
+        vector<int> result;
+        mon_que mque;
+        for (int i = 0; i < k; i++)
+            mque.push(nums[i]);
+
+        result.push_back(mque.front());
+        for (int i = k; i < nums.size(); i++)
+        {
+            mque.pop(nums[i - k]);
+            mque.push(nums[i]);
+            result.push_back(mque.front());
+        }
+        return result;
+    }
+};
+```
