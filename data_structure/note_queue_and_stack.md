@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-14 09:56:51
- * @LastEditTime: 2021-04-16 20:37:41
+ * @LastEditTime: 2021-04-17 09:38:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Leetcode_Note\data_structure\note_queue_and_stack.md
@@ -290,6 +290,50 @@ public:
             mque.pop(nums[i - k]);
             mque.push(nums[i]);
             result.push_back(mque.front());
+        }
+        return result;
+    }
+};
+```
+
+### 2. 优先级队列
+![](./picture/347.png)
+- 时间复杂度为 **O(nlogn)** ，空间复杂度为 **O(n)**
+> 1. 构造优先列就可以很容易的解决问题
+> 2. 关键在于对priority_queue参数的使用与理解
+
+```cpp
+class Solution {
+public:
+    class pair_compair{
+    public:
+        bool operator()(const pair<int, int> a, const pair<int, int> b)
+        {
+            return a.second > b.second;
+        }
+    };
+    
+    vector<int> topKFrequent(vector<int>& nums, int k) 
+    {
+        unordered_map<int, int> map;
+        vector<int> result;
+        for (int i = 0; i < nums.size(); i++)
+        {
+            map[nums[i]]++;
+        }
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, pair_compair> pri_que;
+        for (auto iter = map.begin(); iter != map.end(); iter++)
+        {
+            pri_que.push(*iter);
+            if (pri_que.size() > k)
+                pri_que.pop();
+        }
+
+        for (int i = 0; i < k ; i++)
+        {
+            result.push_back(pri_que.top().first);
+            pri_que.pop();
         }
         return result;
     }
