@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-18 13:22:06
+ * @LastEditTime: 2021-04-18 13:26:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -12,9 +12,10 @@
 四种遍历方式
 ### 1. 前序遍历
 ![](./picture/144.png)
-> 1.前序遍历就是中左右的顺序
+> 前序遍历就是中左右的顺序
 递归法
 - 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -82,9 +83,10 @@ public:
 
 ### 2. 中序遍历
 ![](./picture/94.png)
-> 1.中序遍历就是左中右的顺序
+> 中序遍历就是左中右的顺序
 递归法
 - 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -152,9 +154,10 @@ public:
 
 ### 3. 后序遍历
 ![](./picture/145.png)
-> 1.中序遍历就是左中右的顺序
+> 后序遍历就是左右中的顺序
 递归法
 - 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -185,6 +188,7 @@ public:
 迭代法
 - 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
 > 实际上前序是中左右，修改一下写法变为中右左的顺序，在反转一下就可以得到后序遍历了
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -232,6 +236,7 @@ public:
 > 3. NULL节点的加入和出栈规则的规定：保证了当左孩子作为栈顶元素时，不会立即出栈，而是会将当前的左孩子(即栈顶元素)作为下次遍历的父节点接着按照规则顺序入栈。直到当前的左孩子做为父节点再无孩子时(无孩子时，入栈规则就成了(父节点,NULL节点))，遇到NULL节点了，才进行出栈。这样就保证了左孩子先出栈
 
 - 中序遍历
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -279,6 +284,7 @@ public:
 ```
 
 - 前序遍历
+
 ```cpp
 /**
  * Definition for a binary tree node.
@@ -326,6 +332,7 @@ public:
 ```
 
 - 后序遍历
+
 ```cpp
 /**
  * Definition for a binary tree node.
