@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-18 13:26:28
+ * @LastEditTime: 2021-04-19 13:24:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -381,5 +381,157 @@ public:
 ```
 
 ### 5. 层序遍历
+#### 5.1 层序遍历
+![](./picture/102.png)
+> 根据性质设置队列，通过分层计数的方式可以很容易的完成遍历
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) 
+    {
+        vector<vector<int>> res;
+        queue<TreeNode*> que;
+        if (root == nullptr)
+            return res;
+        que.push(root);
+        while (!que.empty())
+        {   
+            vector<int> tmp;
+            int size = que.size();
+            while (size--)
+            {
+                TreeNode* node = que.front();
+                que.pop();
+                tmp.push_back(node->val);
+                if (node->left)
+                    que.push(node->left);
+                if (node->right)
+                    que.push(node->right);    
+            }
+            res.push_back(tmp);
+        }
+        return res;
+    }
+};
+```
+
+#### 5.2 二叉树的右视图
+![](./picture/199.png)
+> 普通层序遍历的变体，每次只取每层的最后一个元素进vector
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) 
+    {
+        vector<int> res;
+        queue<TreeNode*> que;
+        if (root == nullptr)
+            return res;
+        que.push(root);
+        while (!que.empty())
+        {   
+            int size = que.size();
+            while (size--)
+            {
+                TreeNode* node = que.front();
+                que.pop();
+                if (size == 0)
+                    res.push_back(node->val);
+                if (node->left)
+                    que.push(node->left);
+                if (node->right)
+                    que.push(node->right);    
+            }
+        }
+        return res;
+    }
+};
+```
+
+其他层序遍历变体题序号：107， 637， 429
+
+### 6. 反转二叉树
+![](./picture/226.png)
+> 一道很有意思的简单题，其本质是树的遍历，只是树的遍历的操作从访问节点的数值变为了交换当前节点的左右孩子
+> 前序，后序，层序，都可以，但是中序不可以，因为中序的访问顺序为左中右，对中间节点的左右孩子进行了交换之后，继续遍历右孩子节点时，实际上遍历的是未交换前的左孩子节点，所以对左孩子节点执行了两次交换，而右孩子节点没换，所以发生了错误
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) 
+    {
+        if (root == nullptr)
+            return root;
+        //此处为前序遍历代码，稍微改一下就可以得到后序遍历代码
+        swap(root->left, root->right);
+        invertTree(root->left);
+        invertTree(root->right);
+
+        return root;
+    }
+};
+
+//该为层序遍历代码
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) 
+    {
+        queue<TreeNode*> que;
+        if (root == nullptr)
+            return root;
+        que.push(root);
+        while (!que.empty())
+        {
+            TreeNode* node = que.front();
+            que.pop();
+            swap(node->left, node->right);
+            if (node->left)
+                que.push(node->left);
+            if (node->right)
+                que.push(node->right);
+        }
+        return root;
+    }
+};
+```
+
 
 ## 二、栈
