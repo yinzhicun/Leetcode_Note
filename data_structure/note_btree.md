@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-19 13:24:13
+ * @LastEditTime: 2021-04-20 20:39:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -534,4 +534,106 @@ public:
 ```
 
 
-## 二、栈
+## 二、二叉树的属性
+### 1. 递归
+#### 1.1 对称二叉树
+![](./picture/101.png)
+> 注意有返回值为bool类型的递归方法应该怎么写
+> 实际上是对左子树的左右中遍历，对右子树的右左中的遍历同时进行，并完成比较的过程
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) 
+    {
+        if (root == nullptr)
+            return true;
+        return comp(root->left, root->right);
+    }
+
+    bool comp(TreeNode* left, TreeNode* right)
+    {
+        if (!left && !right)
+            return true;
+        if (left && right)
+            return (left->val == right->val &&
+                    comp(left->left, right->right) &&
+                    comp(left->right, right->left));
+        return false;
+    }
+};
+```
+
+#### 1.2 二叉树最大深度
+![](./picture/104.png)
+> 实际上可以看成是一种后序遍历
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) 
+    {
+        if (root == nullptr)
+            return 0;
+        return max(maxDepth(root->left), maxDepth(root->right)) + 1;
+    }
+};
+```
+
+#### 1.3 二叉树最小深度
+![](./picture/111.png)
+> 实际上可以看成是一种后序遍历，重要的是比起最大深度，要排除一个误区如代码所示
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) 
+    {
+        //误区
+        if (root == nullptr)
+            return 0;
+        if (!root->left && root->right)
+            return minDepth(root->right) + 1;
+        if (!root->right && root->left)
+            return minDepth(root->left) + 1;
+        
+        return 1 + min(minDepth(root->left), minDepth(root->right));
+    }
+};
+```
