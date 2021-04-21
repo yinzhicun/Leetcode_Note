@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-20 20:39:45
+ * @LastEditTime: 2021-04-21 10:34:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -634,6 +634,44 @@ public:
             return minDepth(root->left) + 1;
         
         return 1 + min(minDepth(root->left), minDepth(root->right));
+    }
+};
+```
+
+#### 1.4 平衡二叉树
+![](./picture/110.png)
+> 先求深度再判断，避免深度的重复求解
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int height(TreeNode* root)
+    {
+        if (root == NULL)
+            return 0;
+        int leftHeight = height(root->left);
+        int rightHeight = height(root->right);
+        if (leftHeight == -1 || rightHeight == -1 || abs(leftHeight - rightHeight) > 1)
+            return -1;
+        else
+            return max(leftHeight, rightHeight) + 1;
+    }
+
+    bool isBalanced(TreeNode* root) 
+    {
+        return height(root) >= 0;
     }
 };
 ```
