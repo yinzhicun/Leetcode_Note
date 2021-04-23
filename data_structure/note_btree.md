@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-21 10:34:06
+ * @LastEditTime: 2021-04-23 11:11:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -672,6 +672,138 @@ public:
     bool isBalanced(TreeNode* root) 
     {
         return height(root) >= 0;
+    }
+};
+```
+
+### 2.隐藏在递归中的回溯
+当需要遍历二叉树的多条路径时，需要根据判断条进行回溯，回到上一个节点；此时如果采用递归法的话，要记得，每一次递归后都需要一次回溯
+#### 2.1 显示二叉树的所有路径
+![](./picture/257.png)
+> 注意代码的回溯过程
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ //详细版
+class Solution {
+public:
+    
+    vector<string> binaryTreePaths(TreeNode* root) 
+    {
+        vector<int> path_int;
+        vector<string> res;
+        if (!root)
+            return res;
+        traverse(path_int, res, root);
+        return res;
+    }
+
+    void traverse(vector<int>& path_int, vector<string>& res, TreeNode* root)
+    {
+        path_int.push_back(root->val);
+        if (!root->left && !root->right)
+        {   
+            string path_string;
+            for (int i = 0; i < path_int.size() - 1; i++)
+                path_string = path_string + to_string(path_int[i]) + "->";
+            path_string = path_string + to_string(path_int[path_int.size() - 1]);
+            res.push_back(path_string);
+        }
+
+        if (root->left)
+        {
+            traverse(path_int, res, root->left);
+            //递归代码会一直执行，直到遇到出口返回时，执行pop进行回溯
+            path_int.pop_back();
+        }
+        if (root->right)
+        {
+            traverse(path_int, res, root->right);
+            //递归代码会一直执行，直到遇到出口返回时，执行pop进行回溯
+            path_int.pop_back();
+        }
+    }
+};
+```
+
+```cpp
+//简略版
+class Solution {
+public:
+    
+    vector<string> binaryTreePaths(TreeNode* root) 
+    {
+        vector<string> res;
+        if (!root)
+            return res;
+        traverse("", res, root);
+        return res;
+    }
+
+    void traverse(string path, vector<string>& res, TreeNode* root)
+    {
+        path = path + to_string(root->val);
+        if (!root->left && !root->right)
+            res.push_back(path);
+
+        if (root->left)
+        //回溯的过程隐藏在参数传递的过程中，传递的字符串参数是上一次计算出的path
+        //也就是说每次递归回退时，栈中的path就是回溯之后的path了
+            traverse(path + "->", res, root->left);
+            
+        if (root->right)
+            traverse(path + "->", res, root->right);
+    }
+};
+```
+
+```cpp
+//迭代法
+class Solution {
+public:
+    
+    vector<string> binaryTreePaths(TreeNode* root) 
+    {
+        vector<string> res;
+        stack<string> path_stk;
+        stack<TreeNode*> node_stk;
+        if (!root)
+            return res;
+        path_stk.push(to_string(root->val));
+        node_stk.push(root);
+        while (!node_stk.empty())
+        {   
+            //迭代法实际上就是一种遍历的思想
+            TreeNode* node = node_stk.top();
+            node_stk.pop();
+            string path = path_stk.top();
+            path_stk.pop();
+            if (!node->left && !node->right)
+                res.push_back(path);
+
+            if (node->left)
+            {
+                node_stk.push(node->left);
+                path_stk.push(path + "->" + to_string(node->left->val));
+            }
+            if (node->right)
+            {
+                node_stk.push(node->right);
+                path_stk.push(path + "->" + to_string(node->right->val));
+            }
+        }
+        return res;
     }
 };
 ```
