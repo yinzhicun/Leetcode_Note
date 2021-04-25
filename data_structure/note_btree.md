@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-23 11:11:14
+ * @LastEditTime: 2021-04-25 18:54:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -804,6 +804,143 @@ public:
             }
         }
         return res;
+    }
+};
+```
+
+## 三、构造二叉树
+### 1. 由遍历数组重构二叉树
+#### 1.1 中序遍历后序遍历序列构造二叉树
+![](./picture/106.png)
+> 实际上要做的就是递归的分割遍历序列
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int> inorder, vector<int> postorder) 
+    {
+        int size = postorder.size();
+        int i;              
+        if (size == 0)
+            return nullptr;
+
+        TreeNode* root = new TreeNode;
+        root->val = postorder[size - 1];
+        //寻找中序遍历序列中根节点的位置
+        for (i = 0; i < size; i++)
+        {
+            if (inorder[i] == root->val)
+                break;
+        }
+        
+        vector<int> left_inorder(inorder.begin(), inorder.begin() + i);
+        vector<int> right_inorder(inorder.begin() + i + 1, inorder.end());
+        vector<int> left_postorder(postorder.begin(), postorder.begin() + left_inorder.size());
+        vector<int> right_postorder(postorder.begin() + left_inorder.size(), postorder.end() - 1);
+        root->left = buildTree(left_inorder, left_postorder);
+        root->right = buildTree(right_inorder , right_postorder);
+        return root;
+    }
+};
+```
+
+#### 1.2 中序遍历前序遍历序列构造二叉树
+![](./picture/105.png)
+> 实际上要做的就是递归的分割遍历序列，与上题几乎一致
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) 
+    {
+        int size = preorder.size();
+        int i;
+        if (size == 0)
+            return nullptr;
+        TreeNode* root = new TreeNode(preorder[0]);
+        for (i = 0; i < size; i++)
+        {
+            if (inorder[i] == root->val)
+                break;
+        }
+
+        vector<int> left_inorder(inorder.begin(), inorder.begin() + i);
+        vector<int> right_inorder(inorder.begin() + i + 1, inorder.end());
+        vector<int> left_preorder(preorder.begin() + 1, preorder.begin() + 1 + left_inorder.size());
+        vector<int> right_preorder(preorder.begin() + left_preorder.size() + 1, preorder.end());
+
+        root->left = buildTree(left_preorder, left_inorder);
+        root->right = buildTree(right_preorder, right_inorder);
+        return root;
+    }
+};
+```
+
+### 2. 最大二叉树
+![](./picture/654.png)
+> 实际上要做的就是递归的分割遍历序列
+- 时间复杂度为 **O(n^2)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) 
+    {
+        int size = nums.size();
+        if (size == 0)
+            return nullptr;
+        int max_num = INT_MIN;
+        int max_index = 0;
+        for (int i = 0; i < size; i++)
+        {
+            if (nums[i] > max_num)
+            {
+                max_num = nums[i];
+                max_index = i;
+            }
+        }
+
+        TreeNode* root = new TreeNode(max_num);
+        vector<int> left_nums(nums.begin(), nums.begin() + max_index);
+        vector<int> right_nums(nums.begin() + max_index + 1, nums.end());
+        root->left = constructMaximumBinaryTree(left_nums);
+        root->right = constructMaximumBinaryTree(right_nums);
+        return root;
     }
 };
 ```
