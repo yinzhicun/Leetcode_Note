@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-25 18:54:56
+ * @LastEditTime: 2021-04-27 20:30:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -941,6 +941,100 @@ public:
         root->left = constructMaximumBinaryTree(left_nums);
         root->right = constructMaximumBinaryTree(right_nums);
         return root;
+    }
+};
+```
+
+## 四、二叉搜索树
+### 1. 搜索树的性质
+#### 1.1 搜索过程
+![](./picture/700.png)
+> 只需要正常的迭代判断就可以完成的简单任务
+- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ //递归
+class Solution {
+public:
+
+    TreeNode* searchBST(TreeNode* root, int val) 
+    {
+        if (root == nullptr || root->val == val)
+            return root;
+        if (root->val < val)
+            return searchBST(root->right, val);
+        if (root->val > val)
+            return searchBST(root->left, val);
+
+        return nullptr;
+    }
+};
+
+//迭代
+class Solution {
+public:
+
+    TreeNode* searchBST(TreeNode* root, int val) 
+    {
+        while (root)
+        {
+            if (root->val == val)
+                return root;
+            if (root->val > val)
+                root = root->left;
+            //这里一定要有else，因为有对root的赋值操作
+            else if (root->val < val)
+                root = root->right;
+        }
+        return nullptr;
+    }
+};
+```
+
+#### 1.2 判断搜索树
+![](./picture/98.png)
+> 二叉搜索树进行中序遍历后实际上是一个有序的序列，所以对二叉搜索树的判断本质上就是一次中序遍历
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    long max_val = LONG_MIN; 
+    bool isValidBST(TreeNode* root) 
+    {
+        bool left_tree, right_tree;
+        if (!root)
+            return true;
+        
+        left_tree = isValidBST(root->left);
+        if (max_val < root->val)
+            max_val = root->val;
+        else
+            return false;
+        right_tree = isValidBST(root->right);
+        return left_tree && right_tree;
     }
 };
 ```
