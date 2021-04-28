@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-27 20:30:29
+ * @LastEditTime: 2021-04-28 20:33:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -1035,6 +1035,43 @@ public:
             return false;
         right_tree = isValidBST(root->right);
         return left_tree && right_tree;
+    }
+};
+```
+
+#### 1.3 搜索树的最小绝对差
+![](./picture/530.png)
+> 二叉搜索树进行中序遍历后实际上是一个有序的序列，所以对二叉搜索树的判断本质上就是一次中序遍历
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int min_diff = INT_MAX;
+    TreeNode* pre = nullptr;
+    int getMinimumDifference(TreeNode* root) 
+    {
+        if (!root)
+            return min_diff;
+        getMinimumDifference(root->left);
+
+        if (pre)
+            min_diff = min(min_diff, abs(root->val - pre->val));
+        pre = root;
+        
+        getMinimumDifference(root->right);
+        return min_diff;
     }
 };
 ```
