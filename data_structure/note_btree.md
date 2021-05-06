@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-04-28 20:33:45
+ * @LastEditTime: 2021-05-06 10:28:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -1072,6 +1072,119 @@ public:
         
         getMinimumDifference(root->right);
         return min_diff;
+    }
+};
+```
+#### 1.4 搜索树的众数
+![](./picture/501.png)
+> 二叉搜索树进行中序遍历后实际上是一个有序的序列，所以对二叉搜索树的判断本质上就是一次中序遍历，而对众数的判断就相当于对于一个排好序的数组做相应判断
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) 
+    {
+        if (!root)
+            return res;
+
+        findMode(root->left);
+        //计算频率
+        if (!pre)
+            count = 1;
+        else
+        {
+            if (pre->val == root->val)
+                count++;
+            else
+                count = 1;
+        }
+        pre = root;
+        //判断众数
+        if (count == max_count)
+            res.push_back(root->val);
+        if (count > max_count)
+        {
+            max_count = count;
+            res.clear();
+            res.push_back(root->val);
+        }
+
+        findMode(root->right);
+        return res;
+    }
+    
+private:
+    int max_count = 1;
+    int count;
+    TreeNode* pre = nullptr;
+    vector<int> res;
+};
+```
+
+### 2. 公共祖先问题
+#### 2.1 二叉树的公共祖先
+![](./picture/236.png)
+> 只需要正常的迭代判断就可以完成的简单任务
+- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ //递归
+class Solution {
+public:
+
+    TreeNode* searchBST(TreeNode* root, int val) 
+    {
+        if (root == nullptr || root->val == val)
+            return root;
+        if (root->val < val)
+            return searchBST(root->right, val);
+        if (root->val > val)
+            return searchBST(root->left, val);
+
+        return nullptr;
+    }
+};
+
+//迭代
+class Solution {
+public:
+
+    TreeNode* searchBST(TreeNode* root, int val) 
+    {
+        while (root)
+        {
+            if (root->val == val)
+                return root;
+            if (root->val > val)
+                root = root->left;
+            //这里一定要有else，因为有对root的赋值操作
+            else if (root->val < val)
+                root = root->right;
+        }
+        return nullptr;
     }
 };
 ```
