@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-05-07 15:46:05
+ * @LastEditTime: 2021-05-07 19:57:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -1166,6 +1166,63 @@ public:
         else
             return nullptr;
 
+    }
+};
+```
+
+#### 2.2 搜索二叉树的公共祖先
+![](./picture/235.png)
+> 基于二叉搜索树有序的特性,
+- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+//递归
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+    {
+        if (!root)
+            return nullptr;
+        if (root->val > p->val && root->val > q->val)
+        {
+            TreeNode* left = lowestCommonAncestor(root->left, p, q);
+            if (left)
+                return left;
+        }
+        if (root->val < p->val && root->val < q->val)
+        {
+            TreeNode* right = lowestCommonAncestor(root->right, p, q);
+            if (right)
+                return right;
+        }
+        return root;
+    }
+};
+
+//迭代
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
+    {
+        while (root)
+        {
+            if (root->val > p->val && root->val > q->val)
+                root = root->left;
+            else if (root->val < p->val && root->val < q->val)
+                root = root->right;
+            else
+                return root;
+        }
+        return root;
     }
 };
 ```
