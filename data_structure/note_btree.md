@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-05-06 10:28:16
+ * @LastEditTime: 2021-05-07 15:46:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -1136,8 +1136,8 @@ private:
 ### 2. 公共祖先问题
 #### 2.1 二叉树的公共祖先
 ![](./picture/236.png)
-> 只需要正常的迭代判断就可以完成的简单任务
-- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+> 寻找公共祖先的问题实际上是一个自底向上的问题，也就是回溯，实际上是后序遍历的一种
+- 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
 
 ```cpp
 /**
@@ -1146,45 +1146,26 @@ private:
  *     int val;
  *     TreeNode *left;
  *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
- //递归
 class Solution {
 public:
-
-    TreeNode* searchBST(TreeNode* root, int val) 
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) 
     {
-        if (root == nullptr || root->val == val)
+        if (root == nullptr || root == p || root == q)
             return root;
-        if (root->val < val)
-            return searchBST(root->right, val);
-        if (root->val > val)
-            return searchBST(root->left, val);
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+        if (left != nullptr && right != nullptr)
+            return root;
+        else if (left == nullptr && right != nullptr)
+            return right;
+        else if (right == nullptr && left != nullptr)
+            return left;
+        else
+            return nullptr;
 
-        return nullptr;
-    }
-};
-
-//迭代
-class Solution {
-public:
-
-    TreeNode* searchBST(TreeNode* root, int val) 
-    {
-        while (root)
-        {
-            if (root->val == val)
-                return root;
-            if (root->val > val)
-                root = root->left;
-            //这里一定要有else，因为有对root的赋值操作
-            else if (root->val < val)
-                root = root->right;
-        }
-        return nullptr;
     }
 };
 ```
