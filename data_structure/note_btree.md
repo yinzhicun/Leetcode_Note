@@ -1,7 +1,7 @@
 <!--
  * @Author: yinzhicun
  * @Date: 2021-04-18 10:08:24
- * @LastEditTime: 2021-05-07 19:57:11
+ * @LastEditTime: 2021-05-08 10:19:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Leetcode_Note/data_structure/note_btree.md
@@ -947,7 +947,7 @@ public:
 
 ## 四、二叉搜索树
 ### 1. 搜索树的性质
-#### 1.1 搜索过程
+#### 1.1 搜索
 ![](./picture/700.png)
 > 只需要正常的迭代判断就可以完成的简单任务
 - 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
@@ -1133,8 +1133,137 @@ private:
 };
 ```
 
-### 2. 公共祖先问题
-#### 2.1 二叉树的公共祖先
+### 2. 搜索树的操作
+#### 2.1 插入
+![](./picture/701.png)
+> 寻找到对应的空指针插入即可
+- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ 
+//递归
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) 
+    {
+        if (root == NULL) 
+        {
+            TreeNode* node = new TreeNode(val);
+            return node;
+        }
+        if (root->val > val) root->left = insertIntoBST(root->left, val);
+        if (root->val < val) root->right = insertIntoBST(root->right, val);
+        return root;
+    }
+};
+
+//迭代
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) 
+    {
+        TreeNode* cur = root;
+        TreeNode* pre = root;
+        while (cur)
+        {
+            pre = cur;
+            if (cur->val < val)
+                cur = cur->right;
+            else
+                cur = cur->left;
+        }
+
+        TreeNode* node = new TreeNode(val);
+        
+        if (!pre)
+            return node;
+        else if (pre->val < val)
+            pre->right = node;
+        else
+            pre->left = node;
+        
+        return root;
+    }
+};
+```
+
+#### 2.2 删除
+![](./picture/450.png)
+> 寻找到对应的空指针插入即可
+- 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ 
+//递归
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) 
+    {
+        if (root == NULL) 
+        {
+            TreeNode* node = new TreeNode(val);
+            return node;
+        }
+        if (root->val > val) root->left = insertIntoBST(root->left, val);
+        if (root->val < val) root->right = insertIntoBST(root->right, val);
+        return root;
+    }
+};
+
+//迭代
+class Solution {
+public:
+    TreeNode* insertIntoBST(TreeNode* root, int val) 
+    {
+        TreeNode* cur = root;
+        TreeNode* pre = root;
+        while (cur)
+        {
+            pre = cur;
+            if (cur->val < val)
+                cur = cur->right;
+            else
+                cur = cur->left;
+        }
+
+        TreeNode* node = new TreeNode(val);
+        
+        if (!pre)
+            return node;
+        else if (pre->val < val)
+            pre->right = node;
+        else
+            pre->left = node;
+        
+        return root;
+    }
+};
+```
+
+### 3. 公共祖先问题
+#### 3.1 二叉树的公共祖先
 ![](./picture/236.png)
 > 寻找公共祖先的问题实际上是一个自底向上的问题，也就是回溯，实际上是后序遍历的一种
 - 时间复杂度为 **O(n)** ，空间复杂度为 **O(n)**
@@ -1170,7 +1299,7 @@ public:
 };
 ```
 
-#### 2.2 搜索二叉树的公共祖先
+#### 3.2 搜索二叉树的公共祖先
 ![](./picture/235.png)
 > 基于二叉搜索树有序的特性,
 - 时间复杂度为 **O(logn)** ，空间复杂度为 **O(n)**
